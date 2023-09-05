@@ -16,12 +16,15 @@ DB_TYPE = os.environ.get("DB_TYPE")
 DB_PORT = os.environ.get("DB_PORT")
 
 # Database URI
-DB_URI = '${DB_TYPE}://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}'
+DB_URI = "{}://{}:{}@{}:{}/{}".format(DB_TYPE,
+                                      DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME)
 
 db = SQLAlchemy()
 
 # Database Setup function
-def setup_db(app, db_uri = DB_URI):
+
+
+def setup_db(app, db_uri=DB_URI):
     with app.app_context():
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
@@ -34,7 +37,7 @@ def setup_db(app, db_uri = DB_URI):
 class Question(db.Model):
     __tablename__ = "questions"
 
-    id = Column(Integer, primary_key= True)
+    id = Column(Integer, primary_key=True)
     question = Column(String)
     possible_answers = Column(String)
     correct_answer = Column(String)
@@ -62,7 +65,7 @@ class Question(db.Model):
         db.session.commit()
 
     def format(self):
-        return{
+        return {
             "ID": self.id,
             "Question": self.question,
             "Possible Answers": self.possible_answers,
@@ -72,32 +75,38 @@ class Question(db.Model):
             "Continent": self.continent
         }
 
+# Categories or Category Model
+
+
 class Category(db.Model):
     __tablename__ = "categories"
 
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key=True)
     name = Column(String)
 
     def __init__(self, name):
         self.name = name
 
     def format(self):
-        return{
+        return {
             "ID": self.id,
             "Name": self.name
         }
 
+# Difficulty Model
+
+
 class Difficulty(db.Model):
     __tablename__ = "difficulty"
 
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key=True)
     name = Column(String)
 
     def __init__(self, name):
         self.name = name
 
     def format(self):
-        return{
-            "ID" : self.id,
+        return {
+            "ID": self.id,
             "Name": self.name
         }
